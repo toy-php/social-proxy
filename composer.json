@@ -1,0 +1,46 @@
+{
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/toy-php/core"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/toy-php/db"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/toy-php/container"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/toy-php/router"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/toy-php/template"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/toy-php/bus"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/toy-php/http"
+        }
+    ],
+    "require": {
+        "toy-php/core": "dev-master",
+        "toy-php/container": "dev-master",
+        "toy-php/db": "dev-master",
+        "toy-php/router": "dev-master",
+        "toy-php/template": "dev-master",
+        "toy-php/bus": "dev-master",
+        "toy-php/http": "dev-master"
+    },
+    "autoload": {
+        "psr-0": {
+        "": ["app/"]
+        }
+    }
+}
