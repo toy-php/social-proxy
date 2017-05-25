@@ -7,10 +7,12 @@
     <script src="assets/jquery-3.2.1.min.js"></script>
     <?php if (isset($_GET['token'])): ?>
         <script>
-            $.get( "http://testauth.seymus.ru/vk/user_info/", {token: '<?= $_GET['token'];?>'})
-                .done(function( data ) {
-                    $('.response').html(data);
-                });
+            $(document).ready(function () {
+                $.get( "http://testauth.seymus.ru/vk/user_info/", {token: '<?= $_GET['token'];?>'})
+                    .done(function( data ) {
+                        $('.response').html(JSON.stringify(data));
+                    });
+            });
         </script>
 
     <?php endif;?>
