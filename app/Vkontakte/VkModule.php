@@ -17,8 +17,9 @@ class VkModule implements Module
     {
         $core->addRouts([
             '/vk' => [
-                'GET/auth(.*?)' => MainController::run('auth'),
-                'GET/callback(.*?)' => MainController::run('callback'),
+                'GET/auth' => MainController::run('auth'),
+                'GET/callback' => MainController::run('callback'),
+                'GET/validate' => MainController::run('validate'),
             ]
         ]);
     }

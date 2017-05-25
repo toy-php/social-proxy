@@ -5,6 +5,13 @@ namespace Base;
 class Controller
 {
 
+    protected $session;
+
+    public function __construct(SessionStorage $session)
+    {
+        $this->session = $session;
+    }
+
     public function parseHeaders($headersString)
     {
         $allowedHeaders = "!^(server:|content-type:|last-modified|access-control-allow-origin|Content-Length:|Accept-Ranges:|Date:|Via:|Connection:|X-|age|cache-control|vary)!i";
@@ -19,7 +26,7 @@ class Controller
         return $headers;
     }
 
-    public function proxyUrl($proxyUrl, array $config = [])
+    public function getContent($url, array $config = [])
     {
         $headers = '';
         $defaultConfig = [
@@ -30,18 +37,17 @@ class Controller
                 return strlen($header_line);
             }
         ];
-        $curl = curl_init($proxyUrl);
+        $curl = curl_init($url);
         curl_setopt_array($curl, $config + $defaultConfig);
         $contents = curl_exec($curl);
         curl_close($curl);
         return [$contents, $this->parseHeaders($headers)];
     }
 
-
     public static function run($action)
     {
         return function ($request, $response, $app) use ($action) {
-            $class = new static();
+            $class = new static($app['session']);
             $method = $action . 'Action';
             return $class->$method($request, $response, $app);
 

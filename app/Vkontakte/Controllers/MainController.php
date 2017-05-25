@@ -15,7 +15,7 @@ class MainController extends Controller
      * Идентификатор Вашего приложения.
      * @var string
      */
-    protected $clientId ='6044494';
+    protected $clientId = '6044494';
 
     /**
      * Авторизация в соц. сети
@@ -35,7 +35,7 @@ class MainController extends Controller
                 mobile — авторизация для мобильных устройств (без использования Javascript)
             Если пользователь авторизуется с мобильного устройства, будет использован тип mobile.
          */
-        $display ='page';
+        $display = 'page';
 
         /*
             Адрес, на который будет передан code (домен указанного адреса должен соответствовать
@@ -62,15 +62,13 @@ class MainController extends Controller
          */
         $oauthVersion = '5.64';
 
-        /** @var SessionStorage $session */
-        $session = $proxy['session'];
         $query = $request->getQueryParams();
 
         // Адрес переадресации при успешной авторизации
-        $session->set('sessionRedirect', isset($query['redirect']) ? $query['redirect'] : '');
+        $this->session->set('sessionRedirect', isset($query['redirect']) ? $query['redirect'] : '');
 
         // Адрес переадресации при возникновении ошибки
-        $session->set('sessionError', isset($query['error']) ? $query['error'] : '');
+        $this->session->set('sessionError', isset($query['error']) ? $query['error'] : '');
 
         $url = (new Uri('https://oauth.vk.com/authorize'))
             ->withQuery(http_build_query([
@@ -92,8 +90,8 @@ class MainController extends Controller
      * @return Response
      */
     public function callbackAction(ServerRequestInterface $request,
-                               Response $response,
-                               \Proxy $proxy)
+                                   Response $response,
+                                   \Proxy $proxy)
     {
         /*
             Защищенный ключ Вашего приложения (указан в настройках приложения)
@@ -113,10 +111,8 @@ class MainController extends Controller
          */
         $code = isset($query['code']) ? $query['code'] : '';
 
-        /** @var SessionStorage $session */
-        $session = $proxy['session'];
-        $sessionRedirect =  new Uri($session->get('sessionRedirect'));
-        $sessionErrorRedirect =  new Uri($session->get('sessionError'));
+        $sessionRedirect = new Uri($this->session->get('sessionRedirect'));
+        $sessionErrorRedirect = new Uri($this->session->get('sessionError'));
 
         $url = (new Uri('https://oauth.vk.com/access_token'))
             ->withQuery(http_build_query([
@@ -125,13 +121,25 @@ class MainController extends Controller
                 'redirect_uri' => $redirectUri->__toString(),
                 'client_secret' => $clientSecret
             ]));
-        $result = @file_get_contents($url->__toString());
-        if(!$result){
+        list($content) = $this->getContent($url->__toString());
+        if (!$content) {
             return $response->withHeader('Location', $sessionErrorRedirect->__toString());
         }
-        $resultObj = json_decode($result);
+        $resultObj = json_decode($content);
         $resultObj->redirect = $sessionRedirect->__toString();
+        $this->session->set('token', $resultObj->access_token);
         $response->getBody()->write(json_encode($resultObj));
+        return $response->withHeader('Content-Type', 'application/json');
+    }
+
+    public function validateAction(ServerRequestInterface $request,
+                                   Response $response,
+                                   \Proxy $proxy)
+    {
+        $query = $request->getQueryParams();
+        $token = isset($query['token']) ? $query['token'] : '';
+        $result = $this->session->get('token') === $token;
+        $response->getBody()->write(json_encode($result));
         return $response->withHeader('Content-Type', 'application/json');
     }
 }
