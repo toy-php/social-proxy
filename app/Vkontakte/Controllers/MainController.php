@@ -33,9 +33,6 @@ class MainController extends Controller
         // Адрес переадресации при успешной авторизации
         $this->session->set('sessionRedirect', isset($query['redirect']) ? $query['redirect'] : '');
 
-        // Адрес переадресации при возникновении ошибки
-        $this->session->set('sessionError', isset($query['error']) ? $query['error'] : '');
-
         $url = (new Uri('https://oauth.vk.com/authorize'))
             ->withQuery(http_build_query([
                 'client_id' => $this->config->get('client_id'),
@@ -71,7 +68,6 @@ class MainController extends Controller
         $code = isset($query['code']) ? $query['code'] : '';
 
         $sessionRedirect = new Uri($this->session->get('sessionRedirect'));
-        $sessionErrorRedirect = new Uri($this->session->get('sessionError'));
 
         $url = (new Uri('https://oauth.vk.com/access_token'))
             ->withQuery(http_build_query([
@@ -82,15 +78,17 @@ class MainController extends Controller
             ]));
         list($content) = $this->getContent($url->__toString());
         if (!$content) {
-            return $response->withHeader('Location', $sessionErrorRedirect->__toString());
+            $response->getBody()->write(json_encode([
+                'error' => 'invalid_response',
+                'error_description' => 'response error from the authorization server'
+            ]));
+            return $response->withHeader('Content-Type', 'application/json');
         }
         $resultObj = json_decode($content);
         $resultObj->redirect = $sessionRedirect->__toString();
-        if(isset($resultObj->error)){
-            $response->getBody()->write(json_encode($resultObj));
-            return $response->withHeader('Content-Type', 'application/json');
+        if(!isset($resultObj->error)){
+            $this->session->set('token', $resultObj->access_token);
         }
-        $this->session->set('token', $resultObj->access_token);
         $response->getBody()->write(json_encode($resultObj));
         return $response->withHeader('Content-Type', 'application/json');
     }
