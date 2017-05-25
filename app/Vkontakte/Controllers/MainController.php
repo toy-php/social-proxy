@@ -83,6 +83,10 @@ class MainController extends Controller
             return $response->withHeader('Content-Type', 'application/json');
         }
         $userInfo = json_decode($content);
+        if(isset($userInfo->error)){
+            $response->getBody()->write($content);
+            return $response->withHeader('Content-Type', 'application/json');
+        }
         $userInfo->access_token = 'VK-' . $userInfo->access_token;
         $url = new Uri($this->session->get('sessionRedirect'));
         if (!isset($userInfo->error)) {
