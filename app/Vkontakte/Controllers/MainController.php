@@ -83,11 +83,12 @@ class MainController extends Controller
             return $response->withHeader('Content-Type', 'application/json');
         }
         $userInfo = json_decode($content);
+        $userInfo->access_token = 'VK-' . $userInfo->access_token;
         $url = new Uri($this->session->get('sessionRedirect'));
         if (!isset($userInfo->error)) {
-            $this->tokenStorage->set('VK-' . $userInfo->access_token, $userInfo, $userInfo->expires_in);
+            $this->tokenStorage->set($userInfo->access_token, $userInfo, $userInfo->expires_in);
             $url = $url->withQuery(http_build_query([
-                'token' => 'VK-' . $userInfo->access_token
+                'token' => $userInfo->access_token
             ]));
         }
         return $response->withHeader('Location', $url->__toString());
