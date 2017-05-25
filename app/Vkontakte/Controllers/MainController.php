@@ -86,6 +86,10 @@ class MainController extends Controller
         }
         $resultObj = json_decode($content);
         $resultObj->redirect = $sessionRedirect->__toString();
+        if(isset($resultObj->error)){
+            $response->getBody()->write(json_encode($resultObj));
+            return $response->withHeader('Content-Type', 'application/json');
+        }
         $this->session->set('token', $resultObj->access_token);
         $response->getBody()->write(json_encode($resultObj));
         return $response->withHeader('Content-Type', 'application/json');
