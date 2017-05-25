@@ -29,6 +29,7 @@ class MainController extends Controller
         $session = $proxy['session'];
         $query = $request->getQueryParams();
         $session->set('sessionRedirect', isset($query['redirect']) ? $query['redirect'] : '');
+        $session->set('sessionError', isset($query['error']) ? $query['error'] : '');
         $url = (new Uri('https://oauth.vk.com/authorize'))
             ->withQuery(http_build_query([
                 'client_id' => $this->clientId,
@@ -53,6 +54,7 @@ class MainController extends Controller
         /** @var SessionStorage $session */
         $session = $proxy['session'];
         $sessionRedirect =  new Uri($session->get('sessionRedirect'));
+        $sessionErrorRedirect =  new Uri($session->get('sessionError'));
 
         $url = (new Uri('https://oauth.vk.com/access_token'))
             ->withQuery(http_build_query([
@@ -62,8 +64,15 @@ class MainController extends Controller
                 'client_secret' => $clientSecret
             ]));
         $result = file_get_contents($url->__toString());
-        $session->set('result', $result);
+        if(!$result){
+            return $response->withHeader('Location', $sessionErrorRedirect->__toString());
+        }
+        $resultArray = (array) json_decode($result);
         $response->getBody()->write($result);
-        return $response;
+        return $response->withHeader(
+            'Location',
+                $sessionRedirect->withQuery(http_build_query($resultArray))
+                    ->__toString()
+        );
     }
 }
