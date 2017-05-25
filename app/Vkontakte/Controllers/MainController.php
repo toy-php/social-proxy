@@ -87,7 +87,7 @@ class MainController extends Controller
         if (!isset($userInfo->error)) {
             $this->tokenStorage->set('VK-' . $userInfo->access_token, $userInfo, $userInfo->expires_in);
             $url = $url->withQuery(http_build_query([
-                'token' => $userInfo->access_token
+                'token' => 'VK-' . $userInfo->access_token
             ]));
         }
         return $response->withHeader('Location', $url->__toString());
