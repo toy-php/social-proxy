@@ -18,7 +18,9 @@ class MainController extends Controller
                                \Proxy $proxy)
     {
         $display ='page';
-        $redirectUri = $request->getUri()->withPath('/vk/callback');
+        $redirectUri = $request->getUri()
+            ->withPath('/vk/callback')
+            ->withQuery('');
         $scope = 'email';
         $responseType = 'code';
         $oauthVersion = '5.64';
