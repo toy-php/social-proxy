@@ -35,7 +35,7 @@ class MainController extends Controller
             ->withQuery(http_build_query([
                 'client_id' => $clientId,
                 'display' => $display,
-                'redirect_uri' => $redirectUri,
+                'redirect_uri' => $redirectUri->__toString(),
                 'scope' => $scope,
                 'response_type' => $responseType,
                 'v' => $oauthVersion
