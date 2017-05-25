@@ -13,6 +13,12 @@ class Proxy extends \Core\Toy
      */
     static public $mode = self::PROD;
 
+    public function __construct(array $config = [])
+    {
+        parent::__construct($config);
+        $this['session'] = new \Base\Session();
+    }
+
     public static function mode($mode)
     {
         static::$mode = $mode;

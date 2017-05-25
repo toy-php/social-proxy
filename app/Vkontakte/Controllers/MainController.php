@@ -3,7 +3,9 @@
 namespace Vkontakte\Controllers;
 
 use Base\Controller;
+use Base\SessionStorage;
 use Http\Response;
+use Http\Uri;
 use Psr\Http\Message\ServerRequestInterface;
 
 class MainController extends Controller
@@ -13,39 +15,38 @@ class MainController extends Controller
                                Response $response,
                                \Proxy $proxy)
     {
-        $base = 'https://oauth.vk.com';
-        $path = str_replace('/vk', '', $request->getUri()->getPath());
-        $query = $request->getUri()->getQuery();
-        $proxyUrl = $base . $path . '?' . $query;
-        list($content, $headers) = $this->proxyUrl($proxyUrl);
-        if ($content === false) {
-            $response->getBody()->write('Proxy failed to get contents at' . $proxyUrl);
-            return $response->withStatus(503);
+        $clientId ='6044494';
+        $display ='page';
+        $redirectUri = $request->getUri()->withPath('/vk/callback');
+        $scope = 'email';
+        $responseType = 'code';
+        $oauthVersion = '5.64';
+
+        /** @var SessionStorage $session */
+        $session = $proxy['session'];
+        $code = $session->get('code');
+        if(!empty($code)){
+            $url = $redirectUri->withQuery(http_build_query([
+                    'code' => $code
+                ]));
+            return $response->withHeader('Location', $url);
         }
-        foreach ($headers as $name => $value) {
-            $response = $response->withHeader($name, $value);
-        }
-        $response->getBody()->write($content);
-        return $response;
+        $url = (new Uri('https://oauth.vk.com/authorize'))
+            ->withQuery(http_build_query([
+                'client_id' => $clientId,
+                'display' => $display,
+                'redirect_uri' => $redirectUri,
+                'scope' => $scope,
+                'response_type' => $responseType,
+                'v' => $oauthVersion
+            ]));
+        return $response->withHeader('Location', $url);
     }
 
-    public function loginAction(ServerRequestInterface $request,
+    public function callbackAction(ServerRequestInterface $request,
                                Response $response,
                                \Proxy $proxy)
     {
-        $base = 'https://login.vk.com';
-        $path = str_replace('/vk', '', $request->getUri()->getPath());
-        $query = $request->getUri()->getQuery();
-        $proxyUrl = $base . $path . '?' . $query;
-        list($content, $headers) = $this->proxyUrl($proxyUrl);
-        if ($content === false) {
-            $response->getBody()->write('Proxy failed to get contents at' . $proxyUrl);
-            return $response->withStatus(503);
-        }
-        foreach ($headers as $name => $value) {
-            $response = $response->withHeader($name, $value);
-        }
-        $response->getBody()->write($content);
         return $response;
     }
 }
