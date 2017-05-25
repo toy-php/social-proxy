@@ -2,6 +2,9 @@
 
 namespace Base;
 
+use Http\Response;
+use Psr\Http\Message\ServerRequestInterface;
+
 class Controller
 {
 
@@ -14,6 +17,32 @@ class Controller
         $this->session = $session;
         $this->config = $config;
         $this->tokenStorage = $tokenStorage;
+    }
+
+    /**
+     * Проверка токена на валидность, и получение информации о пользователе
+     * @param ServerRequestInterface $request
+     * @param Response $response
+     * @return Response
+     */
+    public function getUserInfoAction(ServerRequestInterface $request,
+                                      Response $response)
+    {
+        $query = $request->getQueryParams();
+        $token = isset($query['token']) ? $query['token'] : '';
+        $userInfo = $this->tokenStorage->get($token);
+        if (!empty($userInfo)
+            and isset($userInfo->access_token)
+            and $userInfo->access_token === $token) {
+            $response->getBody()->write(json_encode($userInfo));
+        } else {
+            $response->getBody()->write(json_encode([
+                'error' => 'invalid_token',
+                'error_description' => 'invalid token'
+            ]));
+        }
+        return $response->withHeader('Content-Type', 'application/json')
+            ->withHeader('Access-Control-Allow-Origin', '*');
     }
 
     public function parseHeaders($headersString)

@@ -8,7 +8,7 @@
     <?php if (isset($_GET['token'])): ?>
         <script>
             $(document).ready(function () {
-                $.get( "http://testauth.seymus.ru/vk/user_info/", {token: '<?= $_GET['token'];?>'})
+                $.get( "http://testauth.seymus.ru/user_info/", {token: '<?= $_GET['token'];?>'})
                     .done(function( data ) {
                         $('.response').html(JSON.stringify(data));
                     });

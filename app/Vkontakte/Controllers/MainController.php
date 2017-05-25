@@ -85,11 +85,7 @@ class MainController extends Controller
         $userInfo = json_decode($content);
         $url = new Uri($this->session->get('sessionRedirect'));
         if (!isset($userInfo->error)) {
-
-            /**
-             * todo тут необходимо сохранять в key-value хранилище
-             */
-            $this->tokenStorage->set($userInfo->access_token, $userInfo, $userInfo->expires_in);
+            $this->tokenStorage->set('VK-' . $userInfo->access_token, $userInfo, $userInfo->expires_in);
             $url = $url->withQuery(http_build_query([
                 'token' => $userInfo->access_token
             ]));
@@ -97,33 +93,4 @@ class MainController extends Controller
         return $response->withHeader('Location', $url->__toString());
     }
 
-    /**
-     * Проверка токена на валидность
-     * @param ServerRequestInterface $request
-     * @param Response $response
-     * @return Response
-     */
-    public function getUserInfoAction(ServerRequestInterface $request,
-                                      Response $response)
-    {
-        $query = $request->getQueryParams();
-        $token = isset($query['token']) ? $query['token'] : '';
-
-        /**
-         * todo тут необходимо получать из key-value хранилища
-         */
-        $userInfo = $this->tokenStorage->get($token);
-        if (!empty($userInfo)
-            and isset($userInfo->access_token)
-            and $userInfo->access_token === $token) {
-            $response->getBody()->write(json_encode($userInfo));
-        } else {
-            $response->getBody()->write(json_encode([
-                'error' => 'invalid_token',
-                'error_description' => 'invalid token'
-            ]));
-        }
-        return $response->withHeader('Content-Type', 'application/json')
-            ->withHeader('Access-Control-Allow-Origin', '*');
-    }
 }

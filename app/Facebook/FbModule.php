@@ -1,15 +1,15 @@
 <?php
 
-namespace Vkontakte;
+namespace Facebook;
 
 use Base\Config;
 use Base\Module;
-use Base\Session;
 use Core\Toy;
-use Vkontakte\Controllers\MainController;
+use Facebook\Controllers\MainController;
 
-class VkModule extends Module
+class FbModule extends Module
 {
+
     /**
      * Регистрация модуля в ядре
      * @param Toy $core
@@ -19,7 +19,7 @@ class VkModule extends Module
     {
         parent::register($core);
         $core->addRouts([
-            '/vk' => [
+            '/fb' => [
                 'GET/auth' => MainController::run('auth'),
                 'GET/callback' => MainController::run('callback')
             ]
