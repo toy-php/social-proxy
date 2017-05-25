@@ -54,7 +54,6 @@ class MainController extends Controller
     public function callbackAction(ServerRequestInterface $request,
                                    Response $response)
     {
-        return $response;
         /*
             URL, который использовался при получении code на первом этапе авторизации.
             Должен быть аналогичен переданному при авторизации.
@@ -84,7 +83,7 @@ class MainController extends Controller
             return $response->withHeader('Content-Type', 'application/json');
         }
         $userInfo = json_decode($content);
-        $userInfo->access_token = 'VK-' . $userInfo->access_token;
+        $userInfo->access_token = 'FB-' . $userInfo->access_token;
         $url = new Uri($this->session->get('sessionRedirect'));
         if (!isset($userInfo->error)) {
             $this->tokenStorage->set($userInfo->access_token, $userInfo, $userInfo->expires_in);
