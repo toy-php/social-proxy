@@ -2,6 +2,8 @@
 
 namespace Vkontakte;
 
+use Base\Config;
+use Base\Session;
 use Core\Module;
 use Core\Toy;
 use Vkontakte\Controllers\MainController;
@@ -22,5 +24,7 @@ class VkModule implements Module
                 'GET/validate' => MainController::run('validate'),
             ]
         ]);
+        $core['session'] = new Session();
+        $core['config'] = new Config(include __DIR__ . '/config/config.php');
     }
 }

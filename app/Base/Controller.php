@@ -6,10 +6,12 @@ class Controller
 {
 
     protected $session;
+    protected $config;
 
-    public function __construct(SessionStorage $session)
+    public function __construct(SessionStorage $session, ConfigInterface $config)
     {
         $this->session = $session;
+        $this->config = $config;
     }
 
     public function parseHeaders($headersString)
@@ -47,7 +49,7 @@ class Controller
     public static function run($action)
     {
         return function ($request, $response, $app) use ($action) {
-            $class = new static($app['session']);
+            $class = new static($app['session'], $app['config']);
             $method = $action . 'Action';
             return $class->$method($request, $response);
 

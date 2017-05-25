@@ -11,12 +11,6 @@ class MainController extends Controller
 {
 
     /**
-     * Идентификатор Вашего приложения.
-     * @var string
-     */
-    protected $clientId = '6044494';
-
-    /**
      * Авторизация в соц. сети
      * @param ServerRequestInterface $request
      * @param Response $response
@@ -26,15 +20,6 @@ class MainController extends Controller
                                Response $response)
     {
         /*
-            Указывает тип отображения страницы авторизации. Поддерживаются следующие варианты:
-                page — форма авторизации в отдельном окне;
-                popup — всплывающее окно;
-                mobile — авторизация для мобильных устройств (без использования Javascript)
-            Если пользователь авторизуется с мобильного устройства, будет использован тип mobile.
-         */
-        $display = 'page';
-
-        /*
             Адрес, на который будет передан code (домен указанного адреса должен соответствовать
             основному домену в настройках приложения и перечисленным значениям
             в списке доверенных redirect uri — адреса сравниваются вплоть до path-части).
@@ -42,22 +27,6 @@ class MainController extends Controller
         $redirectUri = $request->getUri()
             ->withPath('/vk/callback')
             ->withQuery('');
-        /*
-            Битовая маска настроек доступа приложения,
-            которые необходимо проверить при авторизации пользователя и запросить отсутствующие.
-            смотреть: https://vk.com/dev/permissions
-         */
-        $scope = 'email';
-        /*
-             Тип ответа, который Вы хотите получить.
-         */
-        $responseType = 'code';
-
-        /*
-            Версия API, которую Вы используете.
-            смотреть: https://vk.com/dev/versions
-         */
-        $oauthVersion = '5.64';
 
         $query = $request->getQueryParams();
 
@@ -69,12 +38,12 @@ class MainController extends Controller
 
         $url = (new Uri('https://oauth.vk.com/authorize'))
             ->withQuery(http_build_query([
-                'client_id' => $this->clientId,
-                'display' => $display,
+                'client_id' => $this->config->get('client_id'),
+                'display' => $this->config->get('display'),
                 'redirect_uri' => $redirectUri->__toString(),
-                'scope' => $scope,
-                'response_type' => $responseType,
-                'v' => $oauthVersion
+                'scope' => $this->config->get('scope'),
+                'response_type' => $this->config->get('response_type'),
+                'v' => $this->config->get('oauth_version'),
             ]));
         return $response->withHeader('Location', $url);
     }
@@ -88,11 +57,6 @@ class MainController extends Controller
     public function callbackAction(ServerRequestInterface $request,
                                    Response $response)
     {
-        /*
-            Защищенный ключ Вашего приложения (указан в настройках приложения)
-         */
-        $clientSecret = '7LONJuDHTdVIbBz5JgwZ';
-
         /*
             URL, который использовался при получении code на первом этапе авторизации.
             Должен быть аналогичен переданному при авторизации.
@@ -111,10 +75,10 @@ class MainController extends Controller
 
         $url = (new Uri('https://oauth.vk.com/access_token'))
             ->withQuery(http_build_query([
-                'client_id' => $this->clientId,
+                'client_id' => $this->config->get('client_id'),
                 'code' => $code,
                 'redirect_uri' => $redirectUri->__toString(),
-                'client_secret' => $clientSecret
+                'client_secret' => $this->config->get('7LONJuDHTdVIbBz5JgwZ')
             ]));
         list($content) = $this->getContent($url->__toString());
         if (!$content) {
