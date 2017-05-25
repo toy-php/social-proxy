@@ -61,12 +61,9 @@ class MainController extends Controller
                 'redirect_uri' => $redirectUri->__toString(),
                 'client_secret' => $clientSecret
             ]));
-        $result = $session->get('result');
-        if(empty($result)){
-            $result = file_get_contents($url->__toString());
-            $session->set('result', $result);
-            $response->getBody()->write($result);
-        }
+        $result = file_get_contents($url->__toString());
+        $session->set('result', $result);
+        $response->getBody()->write($result);
         return $response;
     }
 }
