@@ -67,8 +67,6 @@ class MainController extends Controller
          */
         $code = isset($query['code']) ? $query['code'] : '';
 
-        $sessionRedirect = new Uri($this->session->get('sessionRedirect'));
-
         $url = (new Uri('https://oauth.vk.com/access_token'))
             ->withQuery(http_build_query([
                 'client_id' => $this->config->get('client_id'),
@@ -85,15 +83,14 @@ class MainController extends Controller
             return $response->withHeader('Content-Type', 'application/json');
         }
         $userInfo = json_decode($content);
-        $userInfo->redirect = $sessionRedirect->__toString();
-        $url = new Uri($sessionRedirect->__toString());
+        $url = new Uri($this->session->get('sessionRedirect'));
         if (!isset($userInfo->error)) {
             $this->session->set('userInfo', $userInfo);
             $url = $url->withQuery(http_build_query([
                 'token' => $userInfo->access_token
             ]));
         }
-        return $response->withHeader('Location', $url);
+        return $response->withHeader('Location', $url->__toString());
     }
 
     /**

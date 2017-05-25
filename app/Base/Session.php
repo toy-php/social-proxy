@@ -12,7 +12,7 @@ class Session implements SessionStorage
     {
         if($auto_start){
             $this->start();
-           // $this->stop();
+            $this->stop();
         }
     }
 
@@ -21,9 +21,9 @@ class Session implements SessionStorage
      */
     public function id()
     {
-       // $this->start();
+        $this->start();
         $sid = session_id();
-      //  $this->stop();
+        $this->stop();
         return $sid;
     }
 
@@ -32,9 +32,9 @@ class Session implements SessionStorage
      */
     public function setId($id)
     {
-      //  $this->start();
+        $this->start();
         session_id($id);
-      //  $this->stop();
+        $this->stop();
     }
 
     /**
@@ -42,9 +42,9 @@ class Session implements SessionStorage
      */
     public function set($name, $value)
     {
-      //  $this->start();
+        $this->start();
         static::$session_vars[$name] = $value;
-       // $this->stop();
+        $this->stop();
     }
 
     /**
@@ -68,9 +68,9 @@ class Session implements SessionStorage
      */
     public function remove($name)
     {
-       // $this->start();
+        $this->start();
         if (isset(static::$session_vars[$name])) unset(static::$session_vars[$name]);
-       // $this->stop();
+        $this->stop();
     }
 
     /**
@@ -101,9 +101,9 @@ class Session implements SessionStorage
      */
     public function destroy()
     {
-        //$this->start();
+        $this->start();
         session_destroy();
-       // $this->stop();
+        $this->stop();
     }
 
 }
