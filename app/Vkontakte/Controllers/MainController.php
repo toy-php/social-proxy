@@ -132,6 +132,6 @@ class MainController extends Controller
         $resultObj = json_decode($result);
         $resultObj->redirect = $sessionRedirect->__toString();
         $response->getBody()->write(json_encode($resultObj));
-        return $response;
+        return $response->withHeader('Content-Type', 'application/json');
     }
 }
