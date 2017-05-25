@@ -3,7 +3,7 @@
 $userInfo = '';
 
 if (isset($_GET['token'])) {
-    $userInfo = file_get_contents('http://testauth.seymus.ru/user_info/?token=' . $_GET['token']);
+    $userInfo = file_get_contents('http://testauth.seymus.ru/vk/user_info/?token=' . $_GET['token']);
 }
 ?>
 <!DOCTYPE html>

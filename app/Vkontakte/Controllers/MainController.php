@@ -108,7 +108,7 @@ class MainController extends Controller
         $query = $request->getQueryParams();
         $token = isset($query['token']) ? $query['token'] : '';
         $userInfo = $this->session->get('userInfo');
-        if($userInfo->access_token === $token){
+        if(isset($userInfo->access_token) and $userInfo->access_token === $token){
             $response->getBody()->write(json_encode($userInfo));
         }else{
             $response->getBody()->write(json_encode([
