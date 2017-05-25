@@ -74,7 +74,7 @@ class MainController extends Controller
                 'client_id' => $this->config->get('client_id'),
                 'code' => $code,
                 'redirect_uri' => $redirectUri->__toString(),
-                'client_secret' => $this->config->get('7LONJuDHTdVIbBz5JgwZ')
+                'client_secret' => $this->config->get('client_secret')
             ]));
         list($content) = $this->getContent($url->__toString());
         if (!$content) {
