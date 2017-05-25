@@ -50,15 +50,8 @@ class MainController extends Controller
 
         /** @var SessionStorage $session */
         $session = $proxy['session'];
-        $token = $session->get('token');
         $sessionRedirect =  new Uri($session->get('sessionRedirect'));
-        if(!empty($token)){
-            $url = $sessionRedirect->withQuery(http_build_query([
-                'token' => $token
-            ]));
-            $session->remove('token');
-            return $response->withHeader('Location', $url);
-        }
+
         $url = (new Uri('https://oauth.vk.com/access_token'))
             ->withQuery(http_build_query([
                 'client_id' => $this->clientId,
@@ -66,6 +59,12 @@ class MainController extends Controller
                 'redirect_uri' => $redirectUri->__toString(),
                 'client_secret' => $clientSecret
             ]));
-        return $response->withHeader('Location', $url);
+        $result = $session->get('result');
+        if(empty($result)){
+            $result = file_get_contents($url->__toString());
+            $session->set('result', $result);
+            $response->getBody()->write($result);
+        }
+        return $response;
     }
 }
