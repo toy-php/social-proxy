@@ -87,7 +87,7 @@ class MainController extends Controller
         $userInfo = json_decode($content);
         $userInfo->redirect = $sessionRedirect->__toString();
         $url = new Uri($sessionRedirect->__toString());
-        if(!isset($userInfo->error)){
+        if (!isset($userInfo->error)) {
             $this->session->set('userInfo', $userInfo);
             $url = $url->withQuery(http_build_query([
                 'token' => $userInfo->access_token
@@ -103,19 +103,20 @@ class MainController extends Controller
      * @return Response
      */
     public function getUserInfoAction(ServerRequestInterface $request,
-                                   Response $response)
+                                      Response $response)
     {
         $query = $request->getQueryParams();
         $token = isset($query['token']) ? $query['token'] : '';
         $userInfo = $this->session->get('userInfo');
-        if(isset($userInfo->access_token) and $userInfo->access_token === $token){
+        if (isset($userInfo->access_token) and $userInfo->access_token === $token) {
             $response->getBody()->write(json_encode($userInfo));
-        }else{
+        } else {
             $response->getBody()->write(json_encode([
                 'error' => 'invalid_token',
                 'error_description' => 'invalid token'
             ]));
         }
-        return $response->withHeader('Content-Type', 'application/json');
+        return $response->withHeader('Content-Type', 'application/json')
+            ->withHeader('Access-Control-Allow-Origin', '*');
     }
 }

@@ -1,19 +1,22 @@
-<?php
 
-$userInfo = '';
-
-if (isset($_GET['token'])) {
-    $userInfo = file_get_contents('http://testauth.seymus.ru/vk/user_info/?token=' . $_GET['token']);
-}
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script src="assets/jquery-3.2.1.min.js"></script>
+    <?php if (isset($_GET['token'])): ?>
+        <script>
+            $.get( "http://testauth.seymus.ru/vk/user_info/", {token: '<?= $_GET['token'];?>'})
+                .done(function( data ) {
+                    $('.response').html(data);
+                });
+        </script>
+
+    <?php endif;?>
 </head>
 <body>
-<?= $userInfo; ?>
+<div class="response"></div>
 <a href="http://testauth.seymus.ru/vk/auth/?redirect=http://localhost:8000/">ВК авторизация</a>
 </body>
 </html>
