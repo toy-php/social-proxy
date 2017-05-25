@@ -15,12 +15,6 @@ class Module implements ModuleInterface
      */
     public function register(Toy $core)
     {
-        $core['session'] = new Session();
-        $memcached = new \Memcached();
-        $memcached->addServer('localhost', 11211);
-        $core['tokenStorage'] = $memcached;
-        $core->addRouts([
-                'GET/user_info' => Controller::run('getUserInfo')
-        ]);
+
     }
 }

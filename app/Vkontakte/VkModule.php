@@ -3,12 +3,11 @@
 namespace Vkontakte;
 
 use Base\Config;
-use Base\Module;
-use Base\Session;
+use Core\Module;
 use Core\Toy;
 use Vkontakte\Controllers\MainController;
 
-class VkModule extends Module
+class VkModule implements Module
 {
     /**
      * Регистрация модуля в ядре
@@ -17,7 +16,6 @@ class VkModule extends Module
      */
     public function register(Toy $core)
     {
-        parent::register($core);
         $core->addRouts([
             '/vk' => [
                 'GET/auth' => MainController::run('auth'),

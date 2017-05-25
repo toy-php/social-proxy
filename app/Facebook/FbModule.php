@@ -3,11 +3,12 @@
 namespace Facebook;
 
 use Base\Config;
-use Base\Module;
+
+use Core\Module;
 use Core\Toy;
 use Facebook\Controllers\MainController;
 
-class FbModule extends Module
+class FbModule implements Module
 {
 
     /**
@@ -17,7 +18,6 @@ class FbModule extends Module
      */
     public function register(Toy $core)
     {
-        parent::register($core);
         $core->addRouts([
             '/fb' => [
                 'GET/auth' => MainController::run('auth'),
