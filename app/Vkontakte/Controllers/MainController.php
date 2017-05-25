@@ -11,11 +11,12 @@ use Psr\Http\Message\ServerRequestInterface;
 class MainController extends Controller
 {
 
+    protected $clientId ='6044494';
+
     public function authAction(ServerRequestInterface $request,
                                Response $response,
                                \Proxy $proxy)
     {
-        $clientId ='6044494';
         $display ='page';
         $redirectUri = $request->getUri()->withPath('/vk/callback');
         $scope = 'email';
@@ -24,16 +25,11 @@ class MainController extends Controller
 
         /** @var SessionStorage $session */
         $session = $proxy['session'];
-        $code = $session->get('code');
-        if(!empty($code)){
-            $url = $redirectUri->withQuery(http_build_query([
-                    'code' => $code
-                ]));
-            return $response->withHeader('Location', $url);
-        }
+        $query = $request->getQueryParams();
+        $session->set('sessionRedirect', isset($query['redirect']) ?: '');
         $url = (new Uri('https://oauth.vk.com/authorize'))
             ->withQuery(http_build_query([
-                'client_id' => $clientId,
+                'client_id' => $this->clientId,
                 'display' => $display,
                 'redirect_uri' => $redirectUri->__toString(),
                 'scope' => $scope,
@@ -47,6 +43,29 @@ class MainController extends Controller
                                Response $response,
                                \Proxy $proxy)
     {
-        return $response;
+        $clientSecret = '7LONJuDHTdVIbBz5JgwZ';
+        $redirectUri = $request->getUri();
+        $query = $request->getQueryParams();
+        $code = isset($query['code']) ?: '';
+
+        /** @var SessionStorage $session */
+        $session = $proxy['session'];
+        $token = $session->get('token');
+        $sessionRedirect =  new Uri($session->get('sessionRedirect'));
+        if(!empty($token)){
+            $url = $sessionRedirect->withQuery(http_build_query([
+                'token' => $token
+            ]));
+            $session->remove('token');
+            return $response->withHeader('Location', $url);
+        }
+        $url = (new Uri('https://oauth.vk.com/access_token'))
+            ->withQuery(http_build_query([
+                'client_id' => $this->clientId,
+                'code' => $code,
+                'redirect_uri' => $redirectUri->__toString(),
+                'client_secret' => $clientSecret
+            ]));
+        return $response->withHeader('Location', $url);
     }
 }
