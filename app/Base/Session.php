@@ -17,7 +17,7 @@ class Session implements SessionStorage
     }
 
     /**
-     * @inheritdoc
+     * Получение идентификатора сессии
      */
     public function id()
     {
@@ -28,7 +28,7 @@ class Session implements SessionStorage
     }
 
     /**
-     * @inheritdoc
+     * Установка идентификатора сессии
      */
     public function setId($id)
     {
@@ -74,7 +74,7 @@ class Session implements SessionStorage
     }
 
     /**
-     * @inheritdoc
+     * Старт сессии
      */
     public function start()
     {
@@ -87,7 +87,7 @@ class Session implements SessionStorage
     }
 
     /**
-     * @inheritdoc
+     * Остановка сессии
      */
     public function stop()
     {
@@ -97,7 +97,7 @@ class Session implements SessionStorage
     }
 
     /**
-     * @inheritdoc
+     * Удаление сессии
      */
     public function destroy()
     {
