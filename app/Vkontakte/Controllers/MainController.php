@@ -3,7 +3,6 @@
 namespace Vkontakte\Controllers;
 
 use Base\Controller;
-use Base\SessionStorage;
 use Http\Response;
 use Http\Uri;
 use Psr\Http\Message\ServerRequestInterface;
@@ -21,12 +20,10 @@ class MainController extends Controller
      * Авторизация в соц. сети
      * @param ServerRequestInterface $request
      * @param Response $response
-     * @param \Proxy $proxy
      * @return Response
      */
     public function authAction(ServerRequestInterface $request,
-                               Response $response,
-                               \Proxy $proxy)
+                               Response $response)
     {
         /*
             Указывает тип отображения страницы авторизации. Поддерживаются следующие варианты:
@@ -86,12 +83,10 @@ class MainController extends Controller
      * Получение токена
      * @param ServerRequestInterface $request
      * @param Response $response
-     * @param \Proxy $proxy
      * @return Response
      */
     public function callbackAction(ServerRequestInterface $request,
-                                   Response $response,
-                                   \Proxy $proxy)
+                                   Response $response)
     {
         /*
             Защищенный ключ Вашего приложения (указан в настройках приложения)
@@ -132,9 +127,14 @@ class MainController extends Controller
         return $response->withHeader('Content-Type', 'application/json');
     }
 
+    /**
+     * Проверка токена на валидность
+     * @param ServerRequestInterface $request
+     * @param Response $response
+     * @return Response
+     */
     public function validateAction(ServerRequestInterface $request,
-                                   Response $response,
-                                   \Proxy $proxy)
+                                   Response $response)
     {
         $query = $request->getQueryParams();
         $token = isset($query['token']) ? $query['token'] : '';

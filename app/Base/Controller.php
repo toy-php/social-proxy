@@ -49,7 +49,7 @@ class Controller
         return function ($request, $response, $app) use ($action) {
             $class = new static($app['session']);
             $method = $action . 'Action';
-            return $class->$method($request, $response, $app);
+            return $class->$method($request, $response);
 
         };
     }
