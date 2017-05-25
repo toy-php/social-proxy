@@ -21,7 +21,7 @@ class VkModule implements Module
             '/vk' => [
                 'GET/auth' => MainController::run('auth'),
                 'GET/callback' => MainController::run('callback'),
-                'GET/validate' => MainController::run('validate'),
+                'GET/user_info' => MainController::run('getUserInfo'),
             ]
         ]);
         $core['session'] = new Session();

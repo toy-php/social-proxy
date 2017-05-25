@@ -84,13 +84,16 @@ class MainController extends Controller
             ]));
             return $response->withHeader('Content-Type', 'application/json');
         }
-        $resultObj = json_decode($content);
-        $resultObj->redirect = $sessionRedirect->__toString();
-        if(!isset($resultObj->error)){
-            $this->session->set('token', $resultObj->access_token);
+        $userInfo = json_decode($content);
+        $userInfo->redirect = $sessionRedirect->__toString();
+        $url = new Uri($sessionRedirect->__toString());
+        if(!isset($userInfo->error)){
+            $this->session->set('userInfo', $userInfo);
+            $url = $url->withQuery(http_build_query([
+                'token' => $userInfo->access_token
+            ]));
         }
-        $response->getBody()->write(json_encode($resultObj));
-        return $response->withHeader('Content-Type', 'application/json');
+        return $response->withHeader('Location', $url);
     }
 
     /**
@@ -99,13 +102,20 @@ class MainController extends Controller
      * @param Response $response
      * @return Response
      */
-    public function validateAction(ServerRequestInterface $request,
+    public function getUserInfoAction(ServerRequestInterface $request,
                                    Response $response)
     {
         $query = $request->getQueryParams();
         $token = isset($query['token']) ? $query['token'] : '';
-        $result = $this->session->get('token') === $token;
-        $response->getBody()->write(json_encode($result));
+        $userInfo = $this->session->get('userInfo');
+        if($userInfo->access_token === $token){
+            $response->getBody()->write(json_encode($userInfo));
+        }else{
+            $response->getBody()->write(json_encode([
+                'error' => 'invalid_token',
+                'error_description' => 'invalid token'
+            ]));
+        }
         return $response->withHeader('Content-Type', 'application/json');
     }
 }
