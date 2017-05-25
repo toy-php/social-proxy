@@ -85,7 +85,11 @@ class MainController extends Controller
         $userInfo = json_decode($content);
         $url = new Uri($this->session->get('sessionRedirect'));
         if (!isset($userInfo->error)) {
-            $this->session->set('userInfo', $userInfo);
+
+            /**
+             * todo тут необходимо сохранять в key-value хранилище
+             */
+            $this->session->set($userInfo->access_token, $userInfo);
             $url = $url->withQuery(http_build_query([
                 'token' => $userInfo->access_token
             ]));
@@ -104,8 +108,14 @@ class MainController extends Controller
     {
         $query = $request->getQueryParams();
         $token = isset($query['token']) ? $query['token'] : '';
-        $userInfo = $this->session->get('userInfo');
-        if (isset($userInfo->access_token) and $userInfo->access_token === $token) {
+
+        /**
+         * todo тут необходимо получать из key-value хранилища
+         */
+        $userInfo = $this->session->get($token);
+        if (!empty($userInfo)
+            and isset($userInfo->access_token)
+            and $userInfo->access_token === $token) {
             $response->getBody()->write(json_encode($userInfo));
         } else {
             $response->getBody()->write(json_encode([
