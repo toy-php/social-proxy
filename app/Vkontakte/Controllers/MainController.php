@@ -89,7 +89,7 @@ class MainController extends Controller
             /**
              * todo тут необходимо сохранять в key-value хранилище
              */
-            $this->session->set($userInfo->access_token, $userInfo);
+            $this->tokenStorage->set($userInfo->access_token, $userInfo, $userInfo->expires_in);
             $url = $url->withQuery(http_build_query([
                 'token' => $userInfo->access_token
             ]));
@@ -112,7 +112,7 @@ class MainController extends Controller
         /**
          * todo тут необходимо получать из key-value хранилища
          */
-        $userInfo = $this->session->get($token);
+        $userInfo = $this->tokenStorage->get($token);
         if (!empty($userInfo)
             and isset($userInfo->access_token)
             and $userInfo->access_token === $token) {

@@ -26,5 +26,8 @@ class VkModule implements Module
         ]);
         $core['session'] = new Session();
         $core['config'] = new Config(include __DIR__ . '/config/config.php');
+        $redis = new \Redis();
+        $redis->connect('127.0.0.1');
+        $core['tokenStorage'] = $redis;
     }
 }

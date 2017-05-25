@@ -7,11 +7,13 @@ class Controller
 
     protected $session;
     protected $config;
+    protected $tokenStorage;
 
-    public function __construct(SessionStorage $session, ConfigInterface $config)
+    public function __construct(SessionStorage $session, ConfigInterface $config, \Redis $tokenStorage)
     {
         $this->session = $session;
         $this->config = $config;
+        $this->tokenStorage = $tokenStorage;
     }
 
     public function parseHeaders($headersString)
@@ -49,7 +51,7 @@ class Controller
     public static function run($action)
     {
         return function ($request, $response, $app) use ($action) {
-            $class = new static($app['session'], $app['config']);
+            $class = new static($app['session'], $app['config'], $app['tokenStorage']);
             $method = $action . 'Action';
             return $class->$method($request, $response);
 
