@@ -44,7 +44,7 @@ class MainController extends Controller
                                \Proxy $proxy)
     {
         $clientSecret = '7LONJuDHTdVIbBz5JgwZ';
-        $redirectUri = $request->getUri();
+        $redirectUri = $request->getUri()->withQuery('');
         $query = $request->getQueryParams();
         $code = isset($query['code']) ?: '';
 
@@ -66,6 +66,6 @@ class MainController extends Controller
                 'redirect_uri' => $redirectUri->__toString(),
                 'client_secret' => $clientSecret
             ]));
-        return $response->withHeader('Location', $url);
+        return $response;//->withHeader('Location', $url);
     }
 }
