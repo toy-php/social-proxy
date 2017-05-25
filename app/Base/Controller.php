@@ -9,7 +9,7 @@ class Controller
     protected $config;
     protected $tokenStorage;
 
-    public function __construct(SessionStorage $session, ConfigInterface $config, \Redis $tokenStorage)
+    public function __construct(SessionStorage $session, ConfigInterface $config, \Memcached $tokenStorage)
     {
         $this->session = $session;
         $this->config = $config;
