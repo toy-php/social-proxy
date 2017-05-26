@@ -74,6 +74,8 @@ class MainController extends Controller
                 'redirect_uri' => $redirectUri->__toString(),
                 'client_secret' => $this->config->get('client_secret')
             ]));
+        var_dump($url->__toString());
+        return $response;
         list($content) = $this->getContent($url->__toString());
         if (!$content) {
             $response->getBody()->write(json_encode([
