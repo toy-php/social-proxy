@@ -22,6 +22,6 @@ class VkModule implements Module
                 'GET/callback' => MainController::run('callback')
             ]
         ]);
-        $core['config'] = new Config(include __DIR__ . '/config/config.php');
+        $core['config']['vk'] = new Config(include __DIR__ . '/config/config.php');
     }
 }

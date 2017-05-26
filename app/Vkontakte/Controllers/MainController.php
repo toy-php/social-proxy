@@ -35,12 +35,12 @@ class MainController extends Controller
 
         $url = (new Uri('https://oauth.vk.com/authorize'))
             ->withQuery(http_build_query([
-                'client_id' => $this->config->get('client_id'),
-                'display' => $this->config->get('display'),
+                'client_id' => $this->config['vk']->get('client_id'),
+                'display' => $this->config['vk']->get('display'),
                 'redirect_uri' => $redirectUri->__toString(),
-                'scope' => $this->config->get('scope'),
-                'response_type' => $this->config->get('response_type'),
-                'v' => $this->config->get('oauth_version'),
+                'scope' => $this->config['vk']->get('scope'),
+                'response_type' => $this->config['vk']->get('response_type'),
+                'v' => $this->config['vk']->get('oauth_version'),
             ]));
         return $response->withHeader('Location', $url);
     }
@@ -69,10 +69,10 @@ class MainController extends Controller
 
         $url = (new Uri('https://oauth.vk.com/access_token'))
             ->withQuery(http_build_query([
-                'client_id' => $this->config->get('client_id'),
+                'client_id' => $this->config['vk']->get('client_id'),
                 'code' => $code,
                 'redirect_uri' => $redirectUri->__toString(),
-                'client_secret' => $this->config->get('client_secret')
+                'client_secret' => $this->config['vk']->get('client_secret')
             ]));
         list($content) = $this->getContent($url->__toString());
         if (!$content) {

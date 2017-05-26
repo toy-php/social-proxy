@@ -24,6 +24,6 @@ class FbModule implements Module
                 'GET/callback' => MainController::run('callback')
             ]
         ]);
-        $core['config'] = new Config(include __DIR__ . '/config/config.php');
+        $core['config']['fb'] = new Config(include __DIR__ . '/config/config.php');
     }
 }

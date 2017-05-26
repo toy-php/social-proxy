@@ -10,6 +10,8 @@ Proxy::mode(Proxy::DEV);
 
 $app = new Proxy();
 
+$app['config'] = new \Container\Container();
+
 $app['session'] = new \Base\Session();
 
 $memcached = new \Memcached();

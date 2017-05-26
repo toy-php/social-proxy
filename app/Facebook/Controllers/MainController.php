@@ -32,15 +32,15 @@ class MainController extends Controller
         // Адрес переадресации при успешной авторизации
         $this->session->set('sessionRedirect', isset($query['redirect']) ? $query['redirect'] : '');
 
-        $version = $this->config->get('oauth_version');
+        $version = $this->config['fb']->get('oauth_version');
 
         $url = (new Uri('https://www.facebook.com/' . $version . '/dialog/oauth'))
             ->withQuery(http_build_query([
-                'client_id' => $this->config->get('client_id'),
-                'display' => $this->config->get('display'),
+                'client_id' => $this->config['fb']->get('client_id'),
+                'display' => $this->config['fb']->get('display'),
                 'redirect_uri' => $redirectUri->__toString(),
-                'scope' => $this->config->get('scope'),
-                'response_type' => $this->config->get('response_type')
+                'scope' => $this->config['fb']->get('scope'),
+                'response_type' => $this->config['fb']->get('response_type')
             ]));
         return $response->withHeader('Location', $url);
     }
@@ -67,14 +67,14 @@ class MainController extends Controller
          */
         $code = isset($query['code']) ? $query['code'] : '';
 
-        $version = $this->config->get('oauth_version');
+        $version = $this->config['fb']->get('oauth_version');
 
         $url = (new Uri('https://graph.facebook.com/' . $version . '/oauth/access_token'))
             ->withQuery(http_build_query([
-                'client_id' => $this->config->get('client_id'),
+                'client_id' => $this->config['fb']->get('client_id'),
                 'code' => $code,
                 'redirect_uri' => $redirectUri->__toString(),
-                'client_secret' => $this->config->get('client_secret')
+                'client_secret' => $this->config['fb']->get('client_secret')
             ]));
         list($content) = $this->getContent($url->__toString());
         if (!$content) {

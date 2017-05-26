@@ -2,6 +2,7 @@
 
 namespace Base;
 
+use Container\Container;
 use Http\Response;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -12,7 +13,7 @@ class Controller
     protected $config;
     protected $tokenStorage;
 
-    public function __construct(SessionStorage $session, ConfigInterface $config, \Memcached $tokenStorage)
+    public function __construct(SessionStorage $session, Container $config, \Memcached $tokenStorage)
     {
         $this->session = $session;
         $this->config = $config;
