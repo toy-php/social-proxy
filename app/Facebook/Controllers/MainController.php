@@ -113,7 +113,7 @@ var_dump($userInfo);
         $url = (new Uri('https://graph.facebook.com/' . $version . '/me'))
             ->withQuery(http_build_query([
                 'scope' => $this->config['fb']->get('scope'),
-                'access_token' => $accessToken
+                'access_token' => $inputToken
             ]));
         list($content) = $this->getContent($url->__toString());
         $userInfoData = json_decode($content);
