@@ -91,8 +91,6 @@ class MainController extends Controller
         }
         $token = explode('#', $userInfo->access_token);
         $userInfo->access_token = 'FB-' . $token[0];
-        var_dump($userInfo->access_token);
-        return $response;
         $url = new Uri($this->session->get('sessionRedirect'));
         if (!isset($userInfo->error)) {
             $this->tokenStorage->set($userInfo->access_token, $userInfo, $userInfo->expires_in);
