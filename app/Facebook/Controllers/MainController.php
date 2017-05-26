@@ -67,15 +67,15 @@ class MainController extends Controller
          */
         $code = isset($query['code']) ? $query['code'] : '';
 
-        $url = (new Uri('https://oauth.vk.com/access_token'))
+        $version = $this->config->get('oauth_version');
+
+        $url = (new Uri('https://graph.facebook.com/' . $version . '/oauth/access_token'))
             ->withQuery(http_build_query([
                 'client_id' => $this->config->get('client_id'),
                 'code' => $code,
                 'redirect_uri' => $redirectUri->__toString(),
                 'client_secret' => $this->config->get('client_secret')
             ]));
-        var_dump($url->__toString());
-        return $response;
         list($content) = $this->getContent($url->__toString());
         if (!$content) {
             $response->getBody()->write(json_encode([
@@ -85,7 +85,7 @@ class MainController extends Controller
             return $response->withHeader('Content-Type', 'application/json');
         }
         $userInfo = json_decode($content);
-        if(isset($userInfo->error)){
+        if (isset($userInfo->error)) {
             $response->getBody()->write($content);
             return $response->withHeader('Content-Type', 'application/json');
         }
