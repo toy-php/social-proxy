@@ -32,7 +32,9 @@ class Controller
         $query = $request->getQueryParams();
         $token = isset($query['token']) ? $query['token'] : '';
         $userInfo = $this->tokenStorage->get($token);
-        if (!empty($userInfo)) {
+        if (!empty($userInfo)
+            and isset($userInfo->access_token)
+            and $userInfo->access_token === $token) {
             $response->getBody()->write(json_encode($userInfo));
         } else {
             $response->getBody()->write(json_encode([

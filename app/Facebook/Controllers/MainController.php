@@ -89,7 +89,7 @@ class MainController extends Controller
             $response->getBody()->write($content);
             return $response->withHeader('Content-Type', 'application/json');
         }
-        $userInfo->access_token = 'FB-' . $userInfo->access_token;
+        $userInfo->access_token = 'FB-' . 'test';
         $url = new Uri($this->session->get('sessionRedirect'));
         if (!isset($userInfo->error)) {
             $this->tokenStorage->set($userInfo->access_token, $userInfo, $userInfo->expires_in);
