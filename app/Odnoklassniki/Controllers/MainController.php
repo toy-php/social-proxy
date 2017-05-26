@@ -89,6 +89,7 @@ class MainController extends Controller
             $response->getBody()->write($content);
             return $response->withHeader('Content-Type', 'application/json');
         }
+        $userInfo->data = $this->getUserInfoData($userInfo->access_token);
         $userInfo->access_token = 'OK-' . $userInfo->access_token;
         $this->tokenStorage->set(
             $userInfo->access_token,
@@ -101,6 +102,19 @@ class MainController extends Controller
         ]));
 
         return $response->withHeader('Location', $sessionRedirectUrl->__toString());
+    }
+
+    /**
+     * Получение информации о пользователе
+     * @param $inputToken
+     * @return object
+     */
+    protected function getUserInfoData($inputToken)
+    {
+        /**
+         * todo Реализовать получение информации о пользователе
+         */
+        return null;
     }
 
 }
