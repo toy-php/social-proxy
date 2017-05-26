@@ -99,6 +99,6 @@ class MainController extends Controller
                 'token' => $userInfo->access_token
             ]));
         }
-        return $response->withHeader('Location', $url->__toString());
+        return $response;//->withHeader('Location', $url->__toString());
     }
 }
