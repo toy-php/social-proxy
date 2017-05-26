@@ -90,7 +90,11 @@ class MainController extends Controller
         $userInfo->access_token = 'VK-' . $userInfo->access_token;
         $sessionRedirectUrl = new Uri($this->session->get('sessionRedirect'));
         if (!isset($userInfo->error)) {
-            $this->tokenStorage->set($userInfo->access_token, $userInfo, $userInfo->expires_in);
+            $this->tokenStorage->set(
+                $userInfo->access_token,
+                $userInfo,
+                $this->getExpirationTime($userInfo->expires_in)
+            );
             $sessionRedirectUrl = $sessionRedirectUrl->withQuery(http_build_query([
                 'token' => $userInfo->access_token
             ]));

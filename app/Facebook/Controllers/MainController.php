@@ -92,7 +92,11 @@ class MainController extends Controller
         $userInfo->access_token = 'FB-' . $userInfo->access_token;
         $sessionRedirectUrl = new Uri($this->session->get('sessionRedirect'));
         if (!isset($userInfo->error)) {
-            $this->tokenStorage->set($userInfo->access_token, $userInfo);
+            $this->tokenStorage->set(
+                $userInfo->access_token,
+                    $userInfo,
+                    $this->getExpirationTime($userInfo->expires_in)
+            );
             $sessionRedirectUrl = $sessionRedirectUrl->withQuery(
                 'token=' . $userInfo->access_token
             );

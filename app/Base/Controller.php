@@ -3,7 +3,7 @@
 namespace Base;
 
 use Container\Container;
-use Http\Response;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class Controller
@@ -23,11 +23,11 @@ class Controller
     /**
      * Проверка токена на валидность, и получение информации о пользователе
      * @param ServerRequestInterface $request
-     * @param Response $response
-     * @return Response
+     * @param ResponseInterface $response
+     * @return ResponseInterface
      */
     public function getUserInfoAction(ServerRequestInterface $request,
-                                      Response $response)
+                                      ResponseInterface $response)
     {
         $query = $request->getQueryParams();
         $token = isset($query['token']) ? $query['token'] : '';
@@ -76,6 +76,12 @@ class Controller
         $contents = curl_exec($curl);
         curl_close($curl);
         return [$contents, $this->parseHeaders($headers)];
+    }
+
+    public function getExpirationTime($expired)
+    {
+        $maxExpirationTime = 60 * 60 * 24 * 30;
+        return $expired <  $maxExpirationTime ? $expired : $maxExpirationTime;
     }
 
     public static function run($action)
