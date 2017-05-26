@@ -102,19 +102,22 @@ class MainController extends Controller
         $sessionRedirectUrl = $sessionRedirectUrl->withQuery(http_build_query([
             'token' => $userInfo->access_token
         ]));
-
+var_dump($userInfo);
         return $response;//->withHeader('Location', $sessionRedirectUrl->__toString());
     }
 
     protected function getUserInfoData($inputToken)
     {
         $accessToken = $this->getAccessToken();
-        var_dump($accessToken);
-        $url = (new Uri('graph.facebook.com/debug_token'))
+        $version = $this->config['fb']->get('oauth_version');
+        $url = (new Uri('https://graph.facebook.com/' . $version . '/debug_token'))
             ->withQuery(http_build_query([
                 'input_token' => $inputToken,
                 'access_token' => $accessToken
             ]));
+        list($content) = $this->getContent($url->__toString());
+        $userInfoData = json_decode($content);
+        return $userInfoData->data;
     }
 
     protected function getAccessToken()
@@ -127,7 +130,8 @@ class MainController extends Controller
                 'grant_type' => 'client_credentials'
             ]));
         list($content) = $this->getContent($url->__toString());
-        return $content;
+        $accessTokenData = json_decode($content);
+        return $accessTokenData->access_token;
     }
 
 }
