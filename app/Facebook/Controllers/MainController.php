@@ -117,7 +117,7 @@ var_dump($userInfo);
             ]));
         list($content) = $this->getContent($url->__toString());
         $userInfoData = json_decode($content);
-        return $userInfoData->data;
+        return $userInfoData;
     }
 
     protected function getAccessToken()
