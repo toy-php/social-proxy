@@ -25,7 +25,7 @@ return [
         которые необходимо проверить при авторизации пользователя и запросить отсутствующие.
         смотреть: https://developers.facebook.com/docs/facebook-login/permissions/
      */
-    'scope' => 'email',
+    'scope' => 'public_profile,email',
 
     /*
          Тип ответа, который Вы хотите получить.

@@ -19,8 +19,9 @@
 </head>
 <body>
 <div class="response"></div>
-<?= time() ?>
-<a href="http://testauth.seymus.ru/vk/auth/?redirect=http://localhost:8000/">ВК авторизация</a>
-<a href="http://testauth.seymus.ru/fb/auth/?redirect=http://localhost:8000/">FB авторизация</a>
+<p>
+    <a href="http://testauth.seymus.ru/vk/auth/?redirect=http://localhost:8000/">ВК авторизация</a>
+    <a href="http://testauth.seymus.ru/fb/auth/?redirect=http://localhost:8000/">FB авторизация</a>
+</p>
 </body>
 </html>
