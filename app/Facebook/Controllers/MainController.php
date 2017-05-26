@@ -89,16 +89,14 @@ class MainController extends Controller
             $response->getBody()->write($content);
             return $response->withHeader('Content-Type', 'application/json');
         }
-        var_dump($userInfo);
-
         $userInfo->access_token = 'FB-' . $userInfo->access_token;
         $url = new Uri($this->session->get('sessionRedirect'));
         if (!isset($userInfo->error)) {
             $this->tokenStorage->set($userInfo->access_token, $userInfo, $userInfo->expires_in);
-            $url = $url->withQuery(http_build_query([
-                'token' => $userInfo->access_token
-            ]));
+            $url = $url->withQuery(
+                'token=' . $userInfo->access_token
+            );
         }
-        return $response;//->withHeader('Location', $url->__toString());
+        return $response->withHeader('Location', $url->__toString());
     }
 }
