@@ -102,13 +102,11 @@ class MainController extends Controller
         $sessionRedirectUrl = $sessionRedirectUrl->withQuery(http_build_query([
             'token' => $userInfo->access_token
         ]));
-var_dump($userInfo);
-        return $response;//->withHeader('Location', $sessionRedirectUrl->__toString());
+        return $response->withHeader('Location', $sessionRedirectUrl->__toString());
     }
 
     protected function getUserInfoData($inputToken)
     {
-        $accessToken = $this->getAccessToken();
         $version = $this->config['fb']->get('oauth_version');
         $url = (new Uri('https://graph.facebook.com/' . $version . '/me'))
             ->withQuery(http_build_query([
