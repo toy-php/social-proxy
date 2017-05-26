@@ -3,8 +3,8 @@
 namespace Vkontakte\Controllers;
 
 use Base\Controller;
-use Http\Response;
 use Http\Uri;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class MainController extends Controller
@@ -13,11 +13,11 @@ class MainController extends Controller
     /**
      * Авторизация в соц. сети
      * @param ServerRequestInterface $request
-     * @param Response $response
-     * @return Response
+     * @param ResponseInterface $response
+     * @return ResponseInterface
      */
     public function authAction(ServerRequestInterface $request,
-                               Response $response)
+                               ResponseInterface $response)
     {
         /*
             Адрес, на который будет передан code (домен указанного адреса должен соответствовать
@@ -48,11 +48,11 @@ class MainController extends Controller
     /**
      * Получение токена
      * @param ServerRequestInterface $request
-     * @param Response $response
-     * @return Response
+     * @param ResponseInterface $response
+     * @return ResponseInterface
      */
     public function callbackAction(ServerRequestInterface $request,
-                                   Response $response)
+                                   ResponseInterface $response)
     {
         /*
             URL, который использовался при получении code на первом этапе авторизации.
