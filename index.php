@@ -26,5 +26,7 @@ $app->registerModule(new \Vkontakte\VkModule());
 
 $app->registerModule(new \Facebook\FbModule());
 
+$app->registerModule(new \Odnoklassniki\OkModule());
+
 $app->run();
 
