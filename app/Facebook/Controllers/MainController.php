@@ -112,7 +112,7 @@ var_dump($userInfo);
         $version = $this->config['fb']->get('oauth_version');
         $url = (new Uri('https://graph.facebook.com/' . $version . '/me'))
             ->withQuery(http_build_query([
-                'input_token' => $inputToken,
+                'scope' => $this->config['fb']->get('scope'),
                 'access_token' => $accessToken
             ]));
         list($content) = $this->getContent($url->__toString());
