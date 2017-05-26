@@ -110,9 +110,9 @@ var_dump($userInfo);
     {
         $accessToken = $this->getAccessToken();
         $version = $this->config['fb']->get('oauth_version');
-        $url = (new Uri('https://graph.facebook.com/' . $version . '/debug_token'))
+        $url = (new Uri('https://graph.facebook.com/' . $version . '/me'))
             ->withQuery(http_build_query([
-                'input_token' => $inputToken,
+                //'input_token' => $inputToken,
                 'access_token' => $accessToken
             ]));
         list($content) = $this->getContent($url->__toString());
