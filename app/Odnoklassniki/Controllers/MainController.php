@@ -66,15 +66,17 @@ class MainController extends Controller
          */
         $code = isset($query['code']) ? $query['code'] : '';
 
-        $url = (new Uri('https://api.ok.ru/oauth/token.do'))
-            ->withQuery(http_build_query([
+        $url = (new Uri('https://api.ok.ru/oauth/token.do'));
+        list($content) = $this->getContent($url->__toString(), [
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => http_build_query([
                 'client_id' => $this->config['ok']->get('client_id'),
                 'code' => $code,
                 'redirect_uri' => $redirectUri->__toString(),
                 'client_secret' => $this->config['ok']->get('client_secret'),
                 'grant_type' => 'authorization_code'
-            ]));
-        list($content) = $this->getContent($url->__toString());
+            ]),
+        ]);
         var_dump($content);
         if (!$content) {
             $response->getBody()->write(json_encode([
