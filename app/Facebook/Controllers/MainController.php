@@ -89,18 +89,45 @@ class MainController extends Controller
             $response->getBody()->write($content);
             return $response->withHeader('Content-Type', 'application/json');
         }
+
+        $userInfo->data = $this->getUserInfoData($userInfo->access_token);
         $userInfo->access_token = 'FB-' . $userInfo->access_token;
+        $this->tokenStorage->set(
+            $userInfo->access_token,
+                $userInfo,
+                $this->getExpirationTime($userInfo->expires_in)
+        );
+
         $sessionRedirectUrl = new Uri($this->session->get('sessionRedirect'));
-        if (!isset($userInfo->error)) {
-            $this->tokenStorage->set(
-                $userInfo->access_token,
-                    $userInfo,
-                    $this->getExpirationTime($userInfo->expires_in)
-            );
-            $sessionRedirectUrl = $sessionRedirectUrl->withQuery(
-                'token=' . $userInfo->access_token
-            );
-        }
-        return $response->withHeader('Location', $sessionRedirectUrl->__toString());
+        $sessionRedirectUrl = $sessionRedirectUrl->withQuery(http_build_query([
+            'token' => $userInfo->access_token
+        ]));
+
+        return $response;//->withHeader('Location', $sessionRedirectUrl->__toString());
     }
+
+    protected function getUserInfoData($inputToken)
+    {
+        $accessToken = $this->getAccessToken();
+        var_dump($accessToken);
+        $url = (new Uri('graph.facebook.com/debug_token'))
+            ->withQuery(http_build_query([
+                'input_token' => $inputToken,
+                'access_token' => $accessToken
+            ]));
+    }
+
+    protected function getAccessToken()
+    {
+        $version = $this->config['fb']->get('oauth_version');
+        $url = (new Uri('https://graph.facebook.com/' . $version . '/oauth/access_token'))
+            ->withQuery(http_build_query([
+                'client_id' => $this->config['fb']->get('client_id'),
+                'client_secret' => $this->config['fb']->get('client_secret'),
+                'grant_type' => 'client_credentials'
+            ]));
+        list($content) = $this->getContent($url->__toString());
+        return $content;
+    }
+
 }
