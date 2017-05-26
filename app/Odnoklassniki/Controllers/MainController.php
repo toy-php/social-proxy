@@ -77,7 +77,6 @@ class MainController extends Controller
                 'grant_type' => 'authorization_code'
             ]),
         ]);
-        var_dump($content);
         if (!$content) {
             $response->getBody()->write(json_encode([
                 'error' => 'invalid_response',
@@ -101,8 +100,7 @@ class MainController extends Controller
             'token' => $userInfo->access_token
         ]));
 
-
-        return $response;//->withHeader('Location', $sessionRedirectUrl->__toString());
+        return $response->withHeader('Location', $sessionRedirectUrl->__toString());
     }
 
 }
