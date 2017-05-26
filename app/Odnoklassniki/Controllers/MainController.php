@@ -98,7 +98,8 @@ class MainController extends Controller
             'token' => $userInfo->access_token
         ]));
 
-        return $response->withHeader('Location', $sessionRedirectUrl->__toString());
+        var_dump($userInfo);
+        return $response;//->withHeader('Location', $sessionRedirectUrl->__toString());
     }
 
 }
