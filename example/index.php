@@ -22,6 +22,7 @@
 <p>
     <a href="http://testauth.seymus.ru/vk/auth/?redirect=http://localhost:8000/">ВК авторизация</a>
     <a href="http://testauth.seymus.ru/fb/auth/?redirect=http://localhost:8000/">FB авторизация</a>
+    <a href="http://testauth.seymus.ru/ok/auth/?redirect=http://localhost:8000/">OK авторизация</a>
 </p>
 </body>
 </html>
