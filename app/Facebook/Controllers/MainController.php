@@ -105,6 +105,11 @@ class MainController extends Controller
         return $response->withHeader('Location', $sessionRedirectUrl->__toString());
     }
 
+    /**
+     * Получение информации о пользователе
+     * @param $inputToken
+     * @return object
+     */
     protected function getUserInfoData($inputToken)
     {
         $version = $this->config['fb']->get('oauth_version');
@@ -118,6 +123,10 @@ class MainController extends Controller
         return $userInfoData;
     }
 
+    /**
+     * Получение ключа доступа приложения
+     * @return string
+     */
     protected function getAccessToken()
     {
         $version = $this->config['fb']->get('oauth_version');
