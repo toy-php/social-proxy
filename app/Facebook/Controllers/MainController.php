@@ -110,7 +110,7 @@ class MainController extends Controller
         $version = $this->config['fb']->get('oauth_version');
         $url = (new Uri('https://graph.facebook.com/' . $version . '/me'))
             ->withQuery(http_build_query([
-                'scope' => $this->config['fb']->get('scope'),
+                'fields' => $this->config['fb']->get('fields'),
                 'access_token' => $inputToken
             ]));
         list($content) = $this->getContent($url->__toString());
